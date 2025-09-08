@@ -1,0 +1,370 @@
+/* 莫兰迪配色方案 */
+:root {
+    /* 日间模式颜色 */
+    --primary-color: #4682B4; /* 蓝色主色调 */
+    --secondary-color: #FFD700; /* 黄色主色调 */
+    --background-color: #F5F5F5;
+    --text-color: #333333;
+    --border-color: #DDDDDD;
+    --canvas-bg: #FFFFFF;
+    --modal-bg: #FFFFFF;
+    --btn-hover: #3A6D99;
+    --food-color: #FFD700; /* 食物为黄色 */
+    --snake-color: #4682B4; /* 蛇为蓝色 */
+    --ad-bg: #F8F8F8;
+    --ad-border: #DDDDDD;
+    --ad-text: #888888;
+    
+    /* 莫兰迪色调补充 */
+    --muted-pink: #E8C4C4;
+    --muted-green: #B8D8BA;
+    --muted-blue: #A9C6D9;
+    --muted-yellow: #F2D5A9;
+}
+
+/* 夜间模式颜色 */
+.dark-mode {
+    --primary-color: #6495ED; /* 更亮的蓝色 */
+    --secondary-color: #FFE45C; /* 更亮的黄色 */
+    --background-color: #2C3E50;
+    --text-color: #ECEFF1;
+    --border-color: #546E7A;
+    --canvas-bg: #1E272E;
+    --modal-bg: #34495E;
+    --btn-hover: #5A8AC6;
+    --food-color: #FFE45C; /* 食物为亮黄色 */
+    --snake-color: #6495ED; /* 蛇为亮蓝色 */
+    --ad-bg: #34495E;
+    --ad-border: #546E7A;
+    --ad-text: #B0BEC5;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+header {
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.game-container {
+    background-color: var(--canvas-bg);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.score-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.score, .high-score {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.difficulty {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+select {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    background-color: var(--canvas-bg);
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+canvas {
+    background-color: var(--canvas-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 5px;
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* 广告容器样式 */
+.ad-container {
+    background-color: var(--ad-bg);
+    border: 1px solid var(--ad-border);
+    border-radius: 5px;
+    padding: 10px;
+    margin: 15px 0;
+    text-align: center;
+    color: var(--ad-text);
+    font-size: 0.9rem;
+}
+
+.ad-placeholder {
+    padding: 20px;
+    font-style: italic;
+}
+
+.ad-top {
+    width: 100%;
+    height: 90px;
+    margin-bottom: 20px;
+}
+
+.ad-bottom {
+    width: 100%;
+    height: 90px;
+    margin-top: 20px;
+}
+
+.ad-side {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 160px;
+    height: 600px;
+    display: none; /* 默认在移动设备上隐藏 */
+}   flex-wrap: wrap;
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}   background-color: var(--canvas-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.primary-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.secondary-btn {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+.btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.primary-btn:hover {
+    background-color: var(--btn-hover);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: var(--modal-bg);
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 80%;
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+    text-align: center;
+}
+
+.close {
+    color: var(--text-color);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: var(--primary-color);
+}
+
+/* Theme and Language Switch */
+.theme-switch, .language-switch {
+    position: absolute;
+    top: 20px;
+    padding: 5px;
+    z-index: 100;
+}
+
+.theme-switch {
+    right: 20px;
+}
+
+.language-switch {
+    left: 20px;
+}
+
+footer {
+    margin-top: auto;
+    padding: 20px 0;
+    text-align: center;
+    width: 100%;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Game over modal specific styles */
+#game-over-title {
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-bottom: 15px;
+    animation: pulse 1.5s infinite;
+}
+
+.game-stats {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+#final-score-text, #high-score-text {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+#finalScore, #finalHighScore {
+    font-weight: bold;
+    color: var(--primary-color);
+    font-size: 1.5rem;
+}
+
+.game-over-icon {
+    font-size: 3rem;
+    color: gold;
+    margin: 15px 0;
+    animation: pulse 2s infinite;
+}
+
+#shareScoreBtn {
+    margin-top: 10px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .game-info {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .score-container {
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    canvas {
+        width: 100%;
+        height: auto;
+    }
+    
+    .controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 30% auto;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .theme-switch, .language-switch {
+        position: relative;
+        top: 0;
+        right: 0;
+        left: 0;
+        margin: 10px auto;
+        text-align: center;
+    }
+    
+    .game-container {
+        padding: 10px;
+    }
+}

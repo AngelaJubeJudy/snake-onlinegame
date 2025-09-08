@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/translations.js"></script>
+    <script src="js/game.js"></script>
+</head>
+<body class="light-mode">
+    <div class="language-switch">
+        <button id="langToggle" class="btn"><i class="fas fa-globe"></i> <span id="currentLang">EN</span></button>
+    </div>
+    <div class="theme-switch">
+        <button id="themeToggle" class="btn"><i class="fas fa-moon"></i></button>
+    </div>
+    <div class="container">
+        <!-- 顶部广告位 -->
+        <div class="ad-container ad-top" id="ad-top">
+            <div class="ad-placeholder">Google AdSense - 顶部横幅</div>
+        </div>
+        
+        <header>
+            <h1 id="title">Snake Game</h1>
+        </header>
+        
+        <div class="game-container">
+            <div class="game-info">
+                <div class="score-container">
+                    <div class="score">
+                        <span id="score-label">Score:</span> <span id="score">0</span>
+                    </div>
+                    <div class="high-score">
+                        <span id="high-score-label">High Score:</span> <span id="highScore">0</span>
+                    </div>
+                </div>
+                <div class="difficulty">
+                    <label for="difficulty-select" id="difficulty-label">Difficulty:</label>
+                    <select id="difficulty-select">
+                        <option value="easy" id="easy-option">Easy</option>
+                        <option value="medium" id="medium-option" selected>Medium</option>
+                        <option value="hard" id="hard-option">Hard</option>
+                    </select>
+                </div>
+            </div>
+            
+            <canvas id="game" width="400" height="400"></canvas>
+            
+            <div class="controls">
+                <button id="startBtn" class="btn primary-btn">Start Game</button>
+                <button id="pauseBtn" class="btn primary-btn"><i class="fas fa-pause"></i></button>
+                <button id="instructionsBtn" class="btn secondary-btn">Instructions</button>
+            </div>
+        </div>
+        
+        <div id="instructionsModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 id="instructions-title">How to Play</h2>
+                <div id="instructions-text">
+                    <h3>键盘控制:</h3>
+                    <p>↑ ↓ ← → 方向键控制蛇的移动方向</p>
+                    <p>空格键或P键暂停/继续游戏</p>
+                    
+                    <h3>触摸控制 (移动设备):</h3>
+                    <p>滑动屏幕或使用屏幕上的方向按钮控制蛇的移动</p>
+                    <p>点击暂停按钮暂停/继续游戏</p>
+                    
+                    <h3>游戏规则:</h3>
+                    <p>吃食物增加长度和得分</p>
+                    <p>撞到墙壁或自己身体游戏结束</p>
+                    <p>可以选择不同难度级别</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="gameOverModal" class="modal">
+            <div class="modal-content">
+                <h2 data-i18n="game-over-title">Game Over!</h2>
+                <div class="game-stats">
+                    <p>
+                        <span data-i18n="final-score-text">Your score: </span>
+                        <span id="finalScore">0</span>
+                    </p>
+                    <p>
+                        <span data-i18n="high-score-text">High score: </span>
+                        <span id="finalHighScore">0</span>
+                    </p>
+                </div>
+                <div class="game-over-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <button id="playAgainBtn" class="btn primary-btn" data-i18n="playAgainBtn">Play Again</button>
+                <button id="shareScoreBtn" class="btn secondary-btn" data-i18n="share-score-btn"><i class="fas fa-share-alt"></i> Share Score</button>
+            </div>
+        </div>
+        
+        <!-- 底部广告位 -->
+        <div class="ad-container ad-bottom" id="ad-bottom">
+            <div class="ad-placeholder">Google AdSense - 底部横幅</div>
+        </div>
+    </div>
+    
+    <!-- 侧边广告位 -->
+    <div class="ad-container ad-side" id="ad-side">
+        <div class="ad-placeholder">Google AdSense - 侧边栏</div>
+    </div>
+    
+    <footer>
+        <p id="footer-text">&copy; 2023 Snake Game</p>
+    </footer>
+
+    <script src="js/ui.js"></script>
+</body>
+</html>
