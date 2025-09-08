@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake Game</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="js/translations.js"></script>
-    <script src="js/game.js"></script>
+    <script src="js/translations.js" defer></script>
+    <script src="js/game.js" defer></script>
 </head>
 <body class="light-mode">
     <div class="language-switch">
@@ -19,7 +20,7 @@
     <div class="container">
         <!-- 顶部广告位 -->
         <div class="ad-container ad-top" id="ad-top">
-            <div class="ad-placeholder">Google AdSense - 顶部横幅</div>
+            <!-- 广告位预留 -->
         </div>
         
         <header>
@@ -51,61 +52,75 @@
             <div class="controls">
                 <button id="startBtn" class="btn primary-btn">Start Game</button>
                 <button id="pauseBtn" class="btn primary-btn"><i class="fas fa-pause"></i></button>
-                <button id="instructionsBtn" class="btn secondary-btn">Instructions</button>
+            </div>
+            
+            <div class="game-instructions">
+                <h3 id="instructions-title" data-i18n="instructions-title">How to Play</h3>
+                <div class="instructions-columns">
+                    <div class="instructions-column">
+                        <h4 data-i18n="keyboard-controls-title">Keyboard Controls:</h4>
+                        <p><i class="fas fa-arrow-up"></i> <i class="fas fa-arrow-down"></i> <i class="fas fa-arrow-left"></i> <i class="fas fa-arrow-right"></i> <span data-i18n="keyboard-controls-arrows">Arrow keys to control snake direction</span></p>
+                        <p><i class="fas fa-keyboard"></i> <span data-i18n="keyboard-controls-pause">Space or P key to pause/resume game</span></p>
+                        <p><i class="fas fa-redo"></i> <span data-i18n="keyboard-controls-restart">R key to quickly restart the game</span></p>
+                        
+                        <h4 data-i18n="touch-controls-title">Touch Controls (Mobile):</h4>
+                        <p><i class="fas fa-hand-point-up"></i> <span data-i18n="touch-controls-swipe">Swipe the screen to control snake direction</span></p>
+                        <p><i class="fas fa-gamepad"></i> <span data-i18n="touch-controls-buttons">Use on-screen direction buttons to control snake</span></p>
+                    </div>
+                    <div class="instructions-column">
+                        <h4 data-i18n="game-rules-title">Game Rules:</h4>
+                        <p><i class="fas fa-apple-alt"></i> <span data-i18n="game-rules-food">Eat food to grow longer and earn points (10 points each)</span></p>
+                        <p><i class="fas fa-skull-crossbones"></i> <span data-i18n="game-rules-collision">Game over if you hit walls or your own body</span></p>
+                        <p><i class="fas fa-tachometer-alt"></i> <span data-i18n="game-rules-difficulty">Choose different difficulty levels (affects snake speed)</span></p>
+                        
+                        <h4 data-i18n="game-tips-title">Game Tips:</h4>
+                        <p><i class="fas fa-lightbulb"></i> <span data-i18n="game-tips-space">Keep enough space between snake head and body</span></p>
+                        <p><i class="fas fa-route"></i> <span data-i18n="game-tips-plan">Plan your path ahead to avoid getting trapped</span></p>
+                    </div>
+                </div>
             </div>
         </div>
         
-        <div id="instructionsModal" class="modal">
+        <div id="instructionsModal" class="modal" style="display: none;">
             <div class="modal-content">
                 <span class="close">&times;</span>
-                <h2 id="instructions-title">How to Play</h2>
-                <div id="instructions-text">
-                    <h3>键盘控制:</h3>
-                    <p>↑ ↓ ← → 方向键控制蛇的移动方向</p>
-                    <p>空格键或P键暂停/继续游戏</p>
-                    
-                    <h3>触摸控制 (移动设备):</h3>
-                    <p>滑动屏幕或使用屏幕上的方向按钮控制蛇的移动</p>
-                    <p>点击暂停按钮暂停/继续游戏</p>
-                    
-                    <h3>游戏规则:</h3>
-                    <p>吃食物增加长度和得分</p>
-                    <p>撞到墙壁或自己身体游戏结束</p>
-                    <p>可以选择不同难度级别</p>
-                </div>
+                <h2>游戏说明已移至游戏窗口下方</h2>
             </div>
         </div>
         
         <div id="gameOverModal" class="modal">
             <div class="modal-content">
-                <h2 data-i18n="game-over-title">Game Over!</h2>
+                <h2 id="game-over-title">Game Over!</h2>
                 <div class="game-stats">
                     <p>
-                        <span data-i18n="final-score-text">Your score: </span>
+                        <span id="final-score-text">Your score: </span>
                         <span id="finalScore">0</span>
                     </p>
                     <p>
-                        <span data-i18n="high-score-text">High score: </span>
+                        <span id="high-score-text">High score: </span>
                         <span id="finalHighScore">0</span>
                     </p>
                 </div>
                 <div class="game-over-icon">
                     <i class="fas fa-trophy"></i>
                 </div>
-                <button id="playAgainBtn" class="btn primary-btn" data-i18n="playAgainBtn">Play Again</button>
-                <button id="shareScoreBtn" class="btn secondary-btn" data-i18n="share-score-btn"><i class="fas fa-share-alt"></i> Share Score</button>
+                <div class="game-over-animation">
+                    <div class="snake-animation"></div>
+                </div>
+                <button id="playAgainBtn" class="btn primary-btn">Play Again</button>
+                <button id="shareScoreBtn" class="btn secondary-btn"><i class="fas fa-share-alt"></i> Share Score</button>
             </div>
         </div>
         
         <!-- 底部广告位 -->
         <div class="ad-container ad-bottom" id="ad-bottom">
-            <div class="ad-placeholder">Google AdSense - 底部横幅</div>
+            <!-- 广告位预留 -->
         </div>
     </div>
     
     <!-- 侧边广告位 -->
     <div class="ad-container ad-side" id="ad-side">
-        <div class="ad-placeholder">Google AdSense - 侧边栏</div>
+        <!-- 广告位预留 -->
     </div>
     
     <footer>

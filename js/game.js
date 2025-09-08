@@ -343,13 +343,34 @@ class SnakeGame {
     gameOver() {
         this.stopGame();
         
-        // Show game over modal
-        document.getElementById('finalScore').textContent = this.score;
-        document.getElementById('finalHighScore').textContent = this.highScore;
-        document.getElementById('gameOverModal').style.display = 'block';
-        
-        // Draw game over state on canvas
+        // Draw game over state on canvas with animation
         this.drawGameOverState();
+        
+        // Animate the game over sequence
+        let opacity = 0;
+        const fadeIn = setInterval(() => {
+            opacity += 0.05;
+            if (opacity >= 1) {
+                clearInterval(fadeIn);
+                
+                // Show game over modal with animation after canvas effect
+                document.getElementById('finalScore').textContent = this.score;
+                document.getElementById('finalHighScore').textContent = this.highScore;
+                const modal = document.getElementById('gameOverModal');
+                modal.style.display = 'block';
+                modal.style.opacity = 0;
+                
+                // Fade in modal
+                let modalOpacity = 0;
+                const fadeInModal = setInterval(() => {
+                    modalOpacity += 0.1;
+                    modal.style.opacity = modalOpacity;
+                    if (modalOpacity >= 1) {
+                        clearInterval(fadeInModal);
+                    }
+                }, 50);
+            }
+        }, 100);
         
         // Setup share button functionality
         document.getElementById('shareScoreBtn').onclick = () => this.shareScore();
@@ -524,51 +545,107 @@ class SnakeGame {
         this.ctx.fillText(resumeMsg, this.canvas.width / 2, this.canvas.height / 2 + 40);
     }
     
-    // Draw game over state
+    // Draw game over state with enhanced visuals
     drawGameOverState() {
         const lang = localStorage.getItem('language') || 'en';
         const message = lang === 'en' ? 'GAME OVER' : '游戏结束';
         
-        // Semi-transparent overlay with gradient
+        // Animated gradient background
+        const time = new Date().getTime() / 3000;
         const gradient = this.ctx.createRadialGradient(
-            this.canvas.width / 2, 
-            this.canvas.height / 2, 
+            this.canvas.width / 2 + Math.sin(time) * 50, 
+            this.canvas.height / 2 + Math.cos(time) * 30, 
             50, 
             this.canvas.width / 2, 
             this.canvas.height / 2, 
             this.canvas.width / 2
         );
-        gradient.addColorStop(0, 'rgba(0, 0, 0, 0.5)');
+        gradient.addColorStop(0, 'rgba(139, 0, 0, 0.7)');
+        gradient.addColorStop(0.6, 'rgba(0, 0, 0, 0.6)');
         gradient.addColorStop(1, 'rgba(0, 0, 0, 0.8)');
         this.ctx.fillStyle = gradient;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // Game over text with shadow
-        this.ctx.shadowColor = 'rgba(255, 0, 0, 0.5)';
-        this.ctx.shadowBlur = 10;
-        this.ctx.fillStyle = '#FF5252';
-        this.ctx.font = 'bold 36px Arial';
+        // Draw snake outline in background
+        this.drawDeadSnake();
+        
+        // Game over text with enhanced shadow and glow effect
+        this.ctx.shadowColor = 'rgba(255, 0, 0, 0.7)';
+        this.ctx.shadowBlur = 15;
+        this.ctx.fillStyle = '#FF3333';
+        this.ctx.font = 'bold 42px Arial';
         this.ctx.textAlign = 'center';
-        this.ctx.fillText(message, this.canvas.width / 2, this.canvas.height / 2 - 40);
+        this.ctx.fillText(message, this.canvas.width / 2, this.canvas.height / 2 - 50);
         
         // Reset shadow
         this.ctx.shadowColor = 'transparent';
         this.ctx.shadowBlur = 0;
         
-        // Score text
+        // Score text with animation
         this.ctx.fillStyle = '#FFFFFF';
-        this.ctx.font = '24px Arial';
+        this.ctx.font = 'bold 28px Arial';
         const scoreMsg = lang === 'en' ? `Score: ${this.score}` : `得分: ${this.score}`;
-        this.ctx.fillText(scoreMsg, this.canvas.width / 2, this.canvas.height / 2);
+        this.ctx.fillText(scoreMsg, this.canvas.width / 2, this.canvas.height / 2 + 10);
         
-        // High score text
+        // High score text with glow effect
         const highScoreMsg = lang === 'en' ? `High Score: ${this.highScore}` : `最高分: ${this.highScore}`;
+        this.ctx.shadowColor = 'rgba(255, 215, 0, 0.5)';
+        this.ctx.shadowBlur = 10;
         this.ctx.fillStyle = '#FFD700'; // Gold color
-        this.ctx.fillText(highScoreMsg, this.canvas.width / 2, this.canvas.height / 2 + 30);
+        this.ctx.fillText(highScoreMsg, this.canvas.width / 2, this.canvas.height / 2 + 50);
+        this.ctx.shadowColor = 'transparent';
+        this.ctx.shadowBlur = 0;
         
-        // Draw trophy icon if score is high
+        // Draw trophy icon with animation if score is high
         if (this.score >= this.highScore && this.score > 0) {
-            this.drawTrophy(this.canvas.width / 2 - 100, this.canvas.height / 2 + 60, 30);
+            const trophyX = this.canvas.width / 2 - 120;
+            const trophyY = this.canvas.height / 2 + 60;
+            const trophySize = 40 + Math.sin(time * 5) * 5; // Pulsing effect
+            this.drawTrophy(trophyX, trophyY, trophySize);
+            
+            // Draw congratulation text
+            this.ctx.fillStyle = '#FFD700';
+            this.ctx.font = 'bold 20px Arial';
+            const congrats = lang === 'en' ? 'New High Score!' : '新的最高分！';
+            this.ctx.fillText(congrats, this.canvas.width / 2, this.canvas.height / 2 + 90);
+        }
+    }
+    
+    // Draw dead snake for game over screen
+    drawDeadSnake() {
+        // Use the actual snake data but make it look dead
+        for (let i = 0; i < this.snake.length; i++) {
+            // Faded color for dead snake
+            this.ctx.fillStyle = 'rgba(100, 100, 100, 0.5)';
+            this.ctx.fillRect(this.snake[i].x, this.snake[i].y, this.gridSize, this.gridSize);
+            
+            // X marks for eyes on head
+            if (i === 0) {
+                this.ctx.strokeStyle = 'rgba(255, 0, 0, 0.7)';
+                this.ctx.lineWidth = 2;
+                
+                // First X
+                const eyeSize = this.gridSize / 4;
+                const eyeX = this.snake[0].x + this.gridSize / 4;
+                const eyeY = this.snake[0].y + this.gridSize / 4;
+                
+                this.ctx.beginPath();
+                this.ctx.moveTo(eyeX - eyeSize/2, eyeY - eyeSize/2);
+                this.ctx.lineTo(eyeX + eyeSize/2, eyeY + eyeSize/2);
+                this.ctx.moveTo(eyeX + eyeSize/2, eyeY - eyeSize/2);
+                this.ctx.lineTo(eyeX - eyeSize/2, eyeY + eyeSize/2);
+                this.ctx.stroke();
+                
+                // Second X
+                const eye2X = this.snake[0].x + 3 * this.gridSize / 4;
+                
+                this.ctx.beginPath();
+                this.ctx.moveTo(eye2X - eyeSize/2, eyeY - eyeSize/2);
+                this.ctx.lineTo(eye2X + eyeSize/2, eyeY + eyeSize/2);
+                this.ctx.moveTo(eye2X + eyeSize/2, eyeY - eyeSize/2);
+                this.ctx.lineTo(eye2X - eyeSize/2, eyeY + eyeSize/2);
+                this.ctx.stroke();
+            }
         }
     }
     

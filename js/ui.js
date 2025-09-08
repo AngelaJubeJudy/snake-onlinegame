@@ -5,15 +5,13 @@
 // DOM Elements
 const startBtn = document.getElementById('startBtn');
 const pauseBtn = document.getElementById('pauseBtn');
-const instructionsBtn = document.getElementById('instructionsBtn');
 const playAgainBtn = document.getElementById('playAgainBtn');
-const instructionsModal = document.getElementById('instructionsModal');
 const gameOverModal = document.getElementById('gameOverModal');
-const closeBtn = document.querySelector('.close');
 const themeToggle = document.getElementById('themeToggle');
 const langToggle = document.getElementById('langToggle');
 const currentLang = document.getElementById('currentLang');
 const adSide = document.getElementById('ad-side');
+const difficultySelect = document.getElementById('difficulty-select');
 
 // Initialize the game
 let game;
@@ -21,15 +19,18 @@ let game;
 // Create game instance when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     try {
-        // Wait for game.js to load
-        setTimeout(() => {
-            // Initialize game
-            game = new SnakeGame('game');
-        }, 500);
-    
+        // Initialize game immediately to avoid white screen
+        game = new SnakeGame('game');
+        
         // Initialize UI settings
         initTheme();
         initLanguage();
+        
+        // Ensure welcome screen is displayed
+        if (game) {
+            game.drawWelcomeMessage();
+            game.startWelcomeAnimation();
+        }
     } catch(error) {
         console.error('Error initializing game:', error);
     }
@@ -55,21 +56,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     pauseBtn.addEventListener('click', () => {
-        if (game.gameRunning) {
-            game.pauseGame();
-            pauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-        } else {
-            game.resumeGame();
-            pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        if (game && game.gameRunning) {
+            game.togglePause();
+            // 按钮图标已在togglePause方法中更新
         }
-    });
-    
-    instructionsBtn.addEventListener('click', () => {
-        instructionsModal.style.display = 'block';
-    });
-    
-    closeBtn.addEventListener('click', () => {
-        instructionsModal.style.display = 'none';
     });
     
     playAgainBtn.addEventListener('click', () => {
@@ -80,9 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Close modal when clicking outside of it
     window.addEventListener('click', (event) => {
-        if (event.target === instructionsModal) {
-            instructionsModal.style.display = 'none';
-        }
         if (event.target === gameOverModal) {
             gameOverModal.style.display = 'none';
         }
@@ -93,6 +80,24 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Language Toggle
     langToggle.addEventListener('click', toggleLanguage);
+    
+    // Initialize difficulty selector
+    difficultySelect.addEventListener('change', function() {
+        if (game) {
+            game.setDifficulty(this.value);
+            
+            // 如果游戏正在运行，停止游戏并回到开始界面
+            if (game.gameRunning) {
+                game.stopGame();
+                game.drawWelcomeMessage();
+                // 更新开始按钮文本
+                const lang = getCurrentLanguage();
+                startBtn.textContent = lang === 'en' ? 'Start Game' : '开始游戏';
+                // 隐藏暂停按钮
+                pauseBtn.style.display = 'none';
+            }
+        }
+    });
     
     // Handle window resize for responsive canvas
     window.addEventListener('resize', () => {
@@ -160,6 +165,15 @@ function setLanguage(lang) {
             } else {
                 element.textContent = translations[key][lang];
             }
+        }
+    });
+    
+    // Update elements with data-i18n attribute
+    const i18nElements = document.querySelectorAll('[data-i18n]');
+    i18nElements.forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (translations[key] && translations[key][lang]) {
+            element.textContent = translations[key][lang];
         }
     });
     
